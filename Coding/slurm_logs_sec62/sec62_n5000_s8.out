@@ -1,0 +1,55 @@
+[=== Module anaconda/3 loaded ===]
+=== Starting Section 6.2 | n=5000, seed=8 ===
+Generating data...
+Training Reward Estimator...
+Training Green Density Estimator...
+Evaluating Fenchel Duality Grid. Saving to ./results_sec_62/results_62_n5000_s8.csv...
+Traceback (most recent call last):
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 290, in <module>
+    r_hat_d, ci_lo, ci_hi, ci_len = compute_influence_opt(
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 199, in compute_influence_opt
+    r_mc = r_hat_fn(X_mc, Y_mc)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 86, in centered_reward
+    raw_r_mc = r_net(torch.cat([x_expanded, Y_mc], dim=-1))
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 37.25 GiB. GPU 0 has a total capacity of 44.64 GiB of which 25.22 GiB is free. Including non-PyTorch memory, this process has 19.41 GiB memory in use. Of the allocated memory 18.84 GiB is allocated by PyTorch, and 76.76 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+======== GPU REPORT ========
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Wed Apr 29 22:18:02 2026
+Driver Version                            : 580.95.05
+CUDA Version                              : 13.0
+
+Attached GPUs                             : 1
+GPU 00000000:E1:00.0
+    Accounting Mode                       : Enabled
+    Accounting Mode Buffer Size           : 4000
+    Accounted Processes
+        Process ID                        : 1150432
+            GPU Utilization               : 76 %
+            Memory Utilization            : 66 %
+            Max memory usage              : 38952 MiB
+            Time                          : 22777 ms
+            Is Running                    : 0
+
+Wed Apr 29 22:18:02 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    On  |   00000000:E1:00.0 Off |                    0 |
+| N/A   37C    P0            109W /  325W |       0MiB /  46068MiB |     13%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+

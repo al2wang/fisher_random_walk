@@ -1,0 +1,43 @@
+[=== Module anaconda/3 loaded ===]
+Finished n=500, seed=10. Covered: False
+
+======== GPU REPORT ========
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Wed Apr 29 22:13:13 2026
+Driver Version                            : 580.95.05
+CUDA Version                              : 13.0
+
+Attached GPUs                             : 1
+GPU 00000000:C1:00.0
+    Accounting Mode                       : Enabled
+    Accounting Mode Buffer Size           : 4000
+    Accounted Processes
+        Process ID                        : 1825008
+            GPU Utilization               : 9 %
+            Memory Utilization            : 2 %
+            Max memory usage              : 5900 MiB
+            Time                          : 18925 ms
+            Is Running                    : 0
+
+Wed Apr 29 22:13:13 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:C1:00.0 Off |                    0 |
+| N/A   29C    P0             97W /  500W |       0MiB /  81920MiB |     30%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+

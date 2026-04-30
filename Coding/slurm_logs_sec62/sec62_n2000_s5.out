@@ -1,0 +1,87 @@
+[=== Module anaconda/3 loaded ===]
+=== Starting Section 6.2 | n=2000, seed=5 ===
+Generating data...
+Training Reward Estimator...
+Training Green Density Estimator...
+Evaluating Fenchel Duality Grid. Saving to ./results_sec_62/results_62_n2000_s5.csv...
+  r=0.1, kl         | Err: 7.6239 | Cov: 0
+  r=0.1, chi2       | Err: 5.1810 | Cov: 0
+  r=0.1, tsallis-5  | Err: 0.0001 | Cov: 1
+  r=0.1, tsallis-10 | Err: 0.0065 | Cov: 1
+  r=0.2, kl         | Err: 7.7320 | Cov: 0
+  r=0.2, chi2       | Err: 5.9069 | Cov: 0
+  r=0.2, tsallis-5  | Err: 0.0047 | Cov: 1
+  r=0.2, tsallis-10 | Err: 0.0003 | Cov: 1
+  r=0.3, kl         | Err: nan | Cov: 0
+  r=0.3, chi2       | Err: 6.5173 | Cov: 0
+  r=0.3, tsallis-5  | Err: 0.0066 | Cov: 1
+  r=0.3, tsallis-10 | Err: 0.0054 | Cov: 1
+  r=0.4, kl         | Err: nan | Cov: 0
+  r=0.4, chi2       | Err: 6.9899 | Cov: 0
+  r=0.4, tsallis-5  | Err: 0.0058 | Cov: 1
+  r=0.4, tsallis-10 | Err: 0.0646 | Cov: 1
+  r=0.5, kl         | Err: nan | Cov: 0
+  r=0.5, chi2       | Err: 7.3716 | Cov: 0
+  r=0.5, tsallis-5  | Err: 0.0059 | Cov: 1
+  r=0.5, tsallis-10 | Err: 0.0000 | Cov: 1
+  r=0.6, kl         | Err: nan | Cov: 0
+  r=0.6, chi2       | Err: 7.5426 | Cov: 0
+  r=0.6, tsallis-5  | Err: 0.0364 | Cov: 1
+  r=0.6, tsallis-10 | Err: 0.0089 | Cov: 1
+  r=0.7, kl         | Err: nan | Cov: 0
+  r=0.7, chi2       | Err: 7.6681 | Cov: 0
+  r=0.7, tsallis-5  | Err: 0.0692 | Cov: 1
+  r=0.7, tsallis-10 | Err: 0.0814 | Cov: 1
+  r=0.8, kl         | Err: nan | Cov: 0
+  r=0.8, chi2       | Err: 7.6876 | Cov: 0
+  r=0.8, tsallis-5  | Err: 0.1245 | Cov: 1
+  r=0.8, tsallis-10 | Err: 0.1301 | Cov: 1
+  r=0.9, kl         | Err: nan | Cov: 0
+  r=0.9, chi2       | Err: 7.7222 | Cov: 0
+  r=0.9, tsallis-5  | Err: 0.1704 | Cov: 1
+  r=0.9, tsallis-10 | Err: 0.1983 | Cov: 1
+  r=1.0, kl         | Err: nan | Cov: 0
+  r=1.0, chi2       | Err: 7.6811 | Cov: 0
+  r=1.0, tsallis-5  | Err: 0.4917 | Cov: 1
+  r=1.0, tsallis-10 | Err: 0.5129 | Cov: 1
+
+======== GPU REPORT ========
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Wed Apr 29 22:17:10 2026
+Driver Version                            : 580.95.05
+CUDA Version                              : 13.0
+
+Attached GPUs                             : 1
+GPU 00000000:41:00.0
+    Accounting Mode                       : Enabled
+    Accounting Mode Buffer Size           : 4000
+    Accounted Processes
+        Process ID                        : 1083153
+            GPU Utilization               : 77 %
+            Memory Utilization            : 28 %
+            Max memory usage              : 73964 MiB
+            Time                          : 34254 ms
+            Is Running                    : 0
+
+Wed Apr 29 22:17:10 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-80GB          On  |   00000000:41:00.0 Off |                    0 |
+| N/A   37C    P0            117W /  500W |       0MiB /  81920MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+

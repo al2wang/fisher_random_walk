@@ -1,0 +1,75 @@
+[=== Module anaconda/3 loaded ===]
+=== Starting Section 6.2 | n=2000, seed=9 ===
+Generating data...
+Training Reward Estimator...
+Training Green Density Estimator...
+Evaluating Fenchel Duality Grid. Saving to ./results_sec_62/results_62_n2000_s9.csv...
+Traceback (most recent call last):
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 290, in <module>
+    r_hat_d, ci_lo, ci_hi, ci_len = compute_influence_opt(
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 199, in compute_influence_opt
+    r_mc = r_hat_fn(X_mc, Y_mc)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 86, in centered_reward
+    raw_r_mc = r_net(torch.cat([x_expanded, Y_mc], dim=-1))
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/Coding/exp_sec_62.py", line 30, in forward
+    return self.net(x).squeeze(-1)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/container.py", line 253, in forward
+    input = module(input)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/modules/activation.py", line 143, in forward
+    return F.relu(input, inplace=self.inplace)
+  File "/network/scratch/g/guangyuan.wang/fisher_random_walk/condaenv/lib/python3.10/site-packages/torch/nn/functional.py", line 1723, in relu
+    result = torch.relu(input)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 19.07 GiB. GPU 0 has a total capacity of 44.66 GiB of which 2.79 GiB is free. Including non-PyTorch memory, this process has 41.87 GiB memory in use. Of the allocated memory 41.52 GiB is allocated by PyTorch, and 28.46 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+======== GPU REPORT ========
+
+==============NVSMI LOG==============
+
+Timestamp                                 : Wed Apr 29 22:17:58 2026
+Driver Version                            : 580.95.05
+CUDA Version                              : 13.0
+
+Attached GPUs                             : 1
+GPU 00000000:A3:00.0
+    Accounting Mode                       : Enabled
+    Accounting Mode Buffer Size           : 4000
+    Accounted Processes
+        Process ID                        : 1299187
+            GPU Utilization               : 59 %
+            Memory Utilization            : 44 %
+            Max memory usage              : 42870 MiB
+            Time                          : 16689 ms
+            Is Running                    : 0
+
+Wed Apr 29 22:17:58 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               On  |   00000000:A3:00.0 Off |                    0 |
+| 30%   48C    P2            184W /  300W |       1MiB /  46068MiB |    100%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
