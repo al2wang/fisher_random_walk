@@ -25,7 +25,7 @@ config = {
 }
 
 # Increased time allocation for generating 1000*50 LLM generations and solving 1000 Riesz representers
-slurm_time = "12:00:00" 
+slurm_time = "72:00:00" 
 
 def main():
     keys, values = zip(*config.items())
