@@ -12,7 +12,6 @@ from sentence_transformers import SentenceTransformer
 # 0. Environment & Architecture Setup
 # ==========================================
 def get_device():
-    """Handles efficient device mapping for standard/cluster environments."""
     if torch.cuda.is_available():
         return torch.device("cuda")
     elif torch.backends.mps.is_available():
@@ -23,21 +22,14 @@ def get_device():
 # 1. Dataset Loading & Complexity Filtering
 # ==========================================
 def load_and_filter_tldr(min_length=1500, max_samples=500):
-    """
-    Pulls the standard TL;DR dataset and filters for 'meaningful' 
-    (long/complex) articles to ensure variance in summary quality.
-    """
     print("Loading CarperAI/openai_summarize_tldr dataset...")
-    # Using the standard RLHF TL;DR dataset
     dataset = load_dataset("CarperAI/openai_summarize_tldr", split="valid")
     
-    # Filter for sufficiently long prompts to ensure task difficulty
     filtered_data = [
         item for item in dataset 
         if len(item['prompt']) >= min_length
     ]
     
-    # Subsample for the experiment
     np.random.shuffle(filtered_data)
     selected_data = filtered_data[:max_samples]
     
@@ -45,12 +37,12 @@ def load_and_filter_tldr(min_length=1500, max_samples=500):
     return selected_data
 
 # ==========================================
-# 2. Treatment Generation (Sampling from pi_0)
+# 2. Treatment Generation (Chunked for OOM Prevention)
 # ==========================================
-def generate_candidate_treatments(prompts, model_name, num_candidates=10, batch_size=4, device="cuda"):
+def generate_candidate_treatments(prompts, model_name, num_candidates=50, max_concurrent=10, device="cuda"):
     """
-    Uses the reference policy pi_0 to sample multiple candidate answers.
-    These act as our un-embedded discrete treatments.
+    Uses the reference policy pi_0 to sample candidate answers.
+    Chunks the generation (max_concurrent) to prevent VRAM explosion for large k.
     """
     print(f"Loading reference policy (pi_0): {model_name}...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
@@ -66,36 +58,37 @@ def generate_candidate_treatments(prompts, model_name, num_candidates=10, batch_
 
     all_candidates = []
     
-    print("Sampling candidate treatments...")
-    for i in tqdm(range(0, len(prompts), batch_size)):
-        batch_prompts = [p['prompt'] for p in prompts[i:i+batch_size]]
+    print(f"Sampling {num_candidates} candidate treatments per prompt (chunked by {max_concurrent})...")
+    for p in tqdm(prompts):
+        prompt_text = p['prompt']
+        inputs = tokenizer(prompt_text, return_tensors="pt", truncation=True, max_length=1024).to(device)
+        prompt_len = len(prompt_text)
         
-        inputs = tokenizer(batch_prompts, return_tensors="pt", padding=True, truncation=True, max_length=1024).to(device)
+        candidates = []
+        remaining = num_candidates
         
-        with torch.no_grad():
-            # Generate multiple independent sequences per prompt
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=100,
-                do_sample=True,
-                temperature=0.7,
-                top_p=0.9,
-                num_return_sequences=num_candidates,
-                pad_token_id=tokenizer.pad_token_id
-            )
+        while remaining > 0:
+            current_k = min(remaining, max_concurrent)
             
-        # Decode and group by prompt
-        decoded_outputs = tokenizer.batch_decode(outputs, skip_special_tokens=True)
-        
-        for j in range(len(batch_prompts)):
-            # Slice the flat output list into groups of size `num_candidates`
-            start_idx = j * num_candidates
-            end_idx = start_idx + num_candidates
+            with torch.no_grad():
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=100,
+                    do_sample=True,
+                    temperature=0.7,
+                    top_p=0.9,
+                    num_return_sequences=current_k,
+                    pad_token_id=tokenizer.pad_token_id
+                )
+                
+            decoded_outputs = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+            for text in decoded_outputs:
+                # Extract just the generated summary
+                candidates.append(text[prompt_len:].strip())
+                
+            remaining -= current_k
             
-            # Extract just the generated summary (strip the prompt)
-            prompt_len = len(batch_prompts[j])
-            candidates = [text[prompt_len:].strip() for text in decoded_outputs[start_idx:end_idx]]
-            all_candidates.append(candidates)
+        all_candidates.append(candidates)
             
     # Free up VRAM before embedding
     del model
@@ -108,9 +101,6 @@ def generate_candidate_treatments(prompts, model_name, num_candidates=10, batch_
 # 3. Continuous Mapping (Embedding into R^d)
 # ==========================================
 def embed_treatments(all_candidates, embedding_model_name, device="cuda"):
-    """
-    Maps the discrete generated text into the continuous treatment space D in R^d.
-    """
     print(f"Loading continuous mapping model: {embedding_model_name}...")
     encoder = SentenceTransformer(embedding_model_name, device=device)
     
@@ -118,7 +108,6 @@ def embed_treatments(all_candidates, embedding_model_name, device="cuda"):
     print("Projecting discrete treatments into continuous space...")
     
     for candidates in tqdm(all_candidates):
-        # Encode returns a numpy array of shape (num_candidates, d)
         embeddings = encoder.encode(candidates, convert_to_numpy=True, normalize_embeddings=True)
         all_embeddings.append(embeddings)
         
@@ -142,25 +131,23 @@ if __name__ == "__main__":
     np.random.seed(42)
     torch.manual_seed(42)
 
-    # Step 1a: Filter for meaningful domains
     prompts = load_and_filter_tldr(max_samples=args.samples)
     
-    # Step 1b: Sample treatments from reference policy
+    # max_concurrent=10 restricts the GPU to processing 10 sequences at a time, protecting VRAM
     discrete_treatments = generate_candidate_treatments(
         prompts, 
         model_name=args.pi_0_model, 
         num_candidates=args.k_candidates, 
+        max_concurrent=10, 
         device=device
     )
     
-    # Step 1c: Map to continuous space
     continuous_treatments = embed_treatments(
         discrete_treatments, 
         embedding_model_name=args.embed_model, 
         device=device
     )
     
-    # Save the structured pipeline results
     print("Structuring and saving dataset...")
     structured_data = []
     for i, p in enumerate(prompts):
